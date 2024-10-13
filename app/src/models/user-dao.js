@@ -31,15 +31,21 @@ class UserDao {
         const stmt = db.prepare('SELECT * FROM users');
         const users = stmt.all();
         console.log({ users })
-        
+
         return users;
     }
 
     save({ cpf, name, email, password, isAdmin, createdAt, updatedAt }) {
         const stmt = db.prepare('INSERT INTO users (cpf, name, email, password, isAdmin, created_at, updated_at) VALUES (@name, @email, @password, @createdAt)');
-        stmt.run({cpf, name, email, password, idAdmin, createdAt, updatedAt});
+        stmt.run({ cpf, name, email, password, idAdmin, createdAt, updatedAt });
     }
 
+    delete(cpf) {
+        const stmt = db.prepare('DELETE FROM users WHERE cpf = ?');
+        const result = stmt.run(cpf);
+
+        return result;
+    }
 }
 
 export {

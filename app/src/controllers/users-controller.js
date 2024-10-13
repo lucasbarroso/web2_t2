@@ -46,6 +46,18 @@ function addUser(req, res) {
 
     res.redirect("/users");
 }
+function deleteUser(req, res) {//falta testar, porém ainda precisa da atualização do banco/model para testes
+    const { cpf } = req.params;  
+    const userDao = new UserDao();
+
+    try {
+        userDao.delete(cpf);  
+        res.redirect("/users");  
+    } catch (error) {
+        console.error("Erro ao tentar remover o usuário:", error);
+        res.status(500).send("Erro ao tentar remover o usuário.");
+    }
+}
 
 export {
     addUser,        // O cpf tem que  ser unico + o perfil (ADMIN/CLIENTE) já é setado na etapa inicial
