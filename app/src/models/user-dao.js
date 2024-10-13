@@ -29,17 +29,17 @@ import { User } from "./user-model.js";
 class UserDao {
     list() {
         const stmt = db.prepare('SELECT * FROM users');
-        // const stmt = db.prepare('SELECT name, email FROM users');
         const users = stmt.all();
         console.log({ users })
         
         return users;
     }
 
-    save({ name, email, password, createdAt }) {
-        const stmt = db.prepare('INSERT INTO users (name, email, password, created_at) VALUES (@name, @email, @password, @createdAt)');
-        stmt.run({name, email, password, createdAt});
+    save({ cpf, name, email, password, isAdmin, createdAt, updatedAt }) {
+        const stmt = db.prepare('INSERT INTO users (cpf, name, email, password, isAdmin, created_at, updated_at) VALUES (@name, @email, @password, @createdAt)');
+        stmt.run({cpf, name, email, password, idAdmin, createdAt, updatedAt});
     }
+
 }
 
 export {
