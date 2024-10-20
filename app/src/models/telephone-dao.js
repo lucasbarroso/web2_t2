@@ -8,7 +8,7 @@ class TelephoneDao {
     }
 
     getTelephonePrincipal(cpf_user){
-        const stmt = db.prepare(`SELECT * FROM telephone WHERE id_usuario = ? and eh_principal = true`)
+        const stmt = db.prepare(`SELECT * FROM telephone WHERE cpf_user = ? and is_principal = true`)
         return stmt.get(cpf_user)
     }
 

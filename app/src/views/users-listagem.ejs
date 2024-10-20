@@ -3,13 +3,14 @@
 <body>
     <%- include('includes/nav') %>
 
-    <a href="/users/add">ADICIONAR USUARIO</a>
+    <a href="/users/addUser">ADICIONAR USUARIO</a>
     <br>
     <h1> <%= data.title %> </h1>
     <ul>
         <% for (let i = 0; i < data.users.length; i++) { %>
             <li>
                 <%= data.users[i].name %> - <%= data.users[i].createdAt %>
+
             </li>
         <% } %>
 

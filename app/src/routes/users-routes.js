@@ -1,17 +1,13 @@
 // import com {} importa apenas o Router de dentro do express
-import { Router } from 'express';
-import { listaUsers, paginaAddUser, addUser } from '../controllers/users-controller.js';
+import { Router } from 'express'
+import { listaUsers, paginaAddUser, addUser } from '../controllers/users-controller.js'
 
-const router = Router();
+const router = Router()
 
-// pagina lista os usuarios
-// router.get('/', (req, res) => {
-//     return listaUsers(req, res);
-// });
-router.get('/', listaUsers);
+router.get('/', listaUsers)
 
-router.get('/add', paginaAddUser);
+router.get('/addUser', paginaAddUser)
 
-router.post('/add', addUser);
+router.post('/addUser', addUser)
 
-export default router;
+export default router

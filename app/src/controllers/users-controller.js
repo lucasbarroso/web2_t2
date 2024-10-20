@@ -1,28 +1,36 @@
-import { UserDao } from "../models/user-dao.js";
-import { User } from "../models/user-model.js";
+import { EmailDao } from "../models/email-dao.js"
+import { TelephoneDao } from "../models/telephone-dao.js"
+import { UserDao } from "../models/user-dao.js"
+import { User } from "../models/user-model.js"
+import { inspect } from 'util'
 
 function listaUsers(req, res) {
-    const userDao = new UserDao();
-    const usersRaw = userDao.list();
-
+    const userDao = new UserDao()
+    const telephoneDao = new TelephoneDao()
+    const emailDao = new EmailDao()
+    const usersRaw = userDao.getAll()
+    let users = []
     for(let user of usersRaw){
+
+        let returnUser = User.instanceRow(user)
         //adicionando telefone principal
-        const telefone = userDao.get
-        if(telefone) usuario.telefonePrincipal = telefone.numero
+        const telephone = telephoneDao.getTelephonePrincipal(user.cpf)
+        if(telephone) returnUser.telephonePrincipal = telephone.number
 
         //adicionando email principal
-        const email = this.emailRepository.buscarEmailPrincipal(usuario.id)
-        if(email) usuario.emailPrincipal = email.email
+        const email = emailDao.getEmailPrincipal(user.cpf)
+        if(email) returnUser.emailPrincipal = email.email
+        console.log('user ' + inspect(user))
+        
+
+        users.push(returnUser)
     }
-    //res.render('usuario', { usuarios })
-    //res.json(usuarios)
 
     const data = {
-        title: "WEB II",
+        title: 'Lista de Usuários',
         users
     }
-    res.render('users-listagem', { data });
-    // o return é opcional aqui, cuidado para nao dar dois renders ao mesmo tempo
+    return res.render('users-listagem', { data })
 }
 
 function paginaAddUser(req, res) {
@@ -39,20 +47,28 @@ function paginaAddUser(req, res) {
 // AUTENTICACAO
 // AUTORIZAÇÃO
 function addUser(req, res) {
-    console.log({ rota: "/users/add", data: req.body })
-    const userDao = new UserDao();
+    const userDao = new UserDao()
+    const body = req.body
+    // verifica se cpf ja está cadastrado
+    let hasUser = userDao.getByCpf(body.cpf)
+    if(hasUser) {
+        const data = {
+            title: "WEB II - Add User",
+            errorMessage: "CPF já cadastrado!"
+        }        
+        return res.render('users-formulario', { data })
+    }
+    
+    // seta campo admin no formato esperado pelo banco 
+    if(body.isAdmin) body.isAdmin = 'true'
+    else body.isAdmin = 'false'
 
-    // const { name, email, password } = req.body;
-    // userDao.save({
-    //     name, email, password
-    // })
-
-    const dados = req.body;
-    const newUser = new User(dados.name, dados.email, dados.password);
-    userDao.save(newUser);
+    const newUser = new User(body.name, body.cpf, body.password, body.isAdmin)
+    userDao.insert(newUser)
 
     res.redirect("/users");
 }
+
 function deleteUser(req, res) {//falta testar, porém ainda precisa da atualização do banco/model para testes
     const { cpf } = req.params;  
     const userDao = new UserDao();

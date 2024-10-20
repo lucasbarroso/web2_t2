@@ -5,10 +5,9 @@ const db = new Database('dados.db', {
 });
 
 db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS user (
         cpf TEXT PRIMARY KEY UNIQUE,
         name TEXT NOT NULL,
-        email TEXT NOT NULL,
         password TEXT NOT NULL,
         is_admin BOOLEAN NOT NULL,
         created_at TEXT,
@@ -22,7 +21,7 @@ db.exec(`
         is_principal BOOLEAN NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTIS email (
+    CREATE TABLE IF NOT EXISTS email (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXTO NOT NULL,
         is_principal BOOLEAN NOT NULL,
