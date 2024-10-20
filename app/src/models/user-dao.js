@@ -55,6 +55,12 @@ class UserDao {
         return stmt.run(id)
     }
 
+    delete(cpf) {
+        const stmt = db.prepare('DELETE FROM users WHERE cpf = ?');
+        const result = stmt.run(cpf);
+
+        return result;
+    }
 }
 
 export {
