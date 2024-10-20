@@ -3,15 +3,17 @@ import { TelephoneDao } from "../models/telephone-dao.js"
 import { UserDao } from "../models/user-dao.js"
 import { User } from "../models/user-model.js"
 import { inspect } from 'util'
+import { paginate } from "../utils/paginate.js"
 
 function listaUsers(req, res) {
     const userDao = new UserDao()
     const telephoneDao = new TelephoneDao()
     const emailDao = new EmailDao()
     const usersRaw = userDao.getAll()
+    const pageNumber = 1
     let users = []
     for(let user of usersRaw){
-
+        
         let returnUser = User.instanceRow(user)
         //adicionando telefone principal
         const telephone = telephoneDao.getTelephonePrincipal(user.cpf)
@@ -26,9 +28,11 @@ function listaUsers(req, res) {
         users.push(returnUser)
     }
 
+    let paged = paginate(users, pageNumber)
+    console.log('paged ' + inspect(paged))
     const data = {
         title: 'Lista de Usuários',
-        users
+        paged
     }
     return res.render('users-listagem', { data })
 }

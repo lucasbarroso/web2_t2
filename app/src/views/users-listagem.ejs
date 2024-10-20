@@ -7,9 +7,10 @@
     <br>
     <h1> <%= data.title %> </h1>
     <ul>
-        <% for (let i = 0; i < data.users.length; i++) { %>
+        
+        <% for (let i = 0; i < data.paged.users.length; i++) { %>
             <li>
-                <%= data.users[i].name %> - <%= data.users[i].createdAt %>
+                <%= data.paged.users[i].name %> - <%= data.paged.users[i].createdAt %>
 
             </li>
         <% } %>
