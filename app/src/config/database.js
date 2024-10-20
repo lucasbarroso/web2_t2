@@ -17,18 +17,16 @@ db.exec(`
 
     CREATE TABLE IF NOT EXISTS telephone (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cpf_user TEXT NOT NULL REFERENCES users,
+        number TEXT NOT NULL,
+        cpf_user TEXT NOT NULL REFERENCES users, 
         is_principal BOOLEAN NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS adress (
+    CREATE TABLE IF NOT EXISTIS email (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cpf_user TEXT NOT NULL REFERENCES users,
-        cep TEXT NOT NULL,
-        street TEXT NOT NULL,
-        number TEXT NOT NULL,
-        complement TEXT NOT NULL,
-        is_principal BOOLEAN NOT NULL
+        email TEXTO NOT NULL,
+        is_principal BOOLEAN NOT NULL,
+        cpf_user TEXT NOT NULL REFERENCES users
     );
 `);
 

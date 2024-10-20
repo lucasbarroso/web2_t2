@@ -27,17 +27,32 @@ import { db } from "../config/database.js";
 import { User } from "./user-model.js";
 
 class UserDao {
-    list() {
-        const stmt = db.prepare('SELECT * FROM users');
-        const users = stmt.all();
-        console.log({ users })
-        
-        return users;
+    buscaTodos(){
+        const stmt = this.db.prepare('SELECT * FROM usuario')
+        return stmt.all()
     }
 
-    save({ cpf, name, email, password, isAdmin, createdAt, updatedAt }) {
-        const stmt = db.prepare('INSERT INTO users (cpf, name, email, password, isAdmin, created_at, updated_at) VALUES (@name, @email, @password, @createdAt)');
-        stmt.run({cpf, name, email, password, idAdmin, createdAt, updatedAt});
+    buscaPorId(id){
+        console.log(id)
+        const stmt = this.db.prepare(`SELECT * FROM usuario WHERE id = ?`)
+        return stmt.get(id)
+    }
+
+    inserir(usuario){
+        const stmt = this.db.prepare(` INSERT INTO 
+        usuario (nome, cpf, tipo) 
+        VALUES (?, ?, ?)`)
+        return stmt.run(usuario.nome, usuario.cpf, usuario.tipo)
+    }
+
+    atualizar(usuario){
+        const stmt = this.db.prepare(`UPDATE usuario SET nome = ?, cpf = ?, tipo = ? WHERE id = ?`)
+        return stmt.run(usuario.nome, usuario.cpf, usuario.tipo, usuario.id)
+    }
+
+    deletar(id){
+        const stmt = this.db.prepare(`DELETE FROM usuario WHERE id = ?`)
+        return stmt.run(id)
     }
 
 }

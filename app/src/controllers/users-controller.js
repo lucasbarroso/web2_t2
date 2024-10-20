@@ -5,10 +5,17 @@ function listaUsers(req, res) {
     const userDao = new UserDao();
     const usersRaw = userDao.list();
 
-    // IDEALMENTE MAPEAMOS OS USERS (RAW/ BRUTA-CRUA DO BANCO DE DADOS PARA O MODEL USER)
-    const users = usersRaw.map(u => new User(u.name, u.email, u.password, u.created_at));
-    // no banco esta salvo como created_at (snake case)
-    // no model estamos utilizando camelCase
+    for(let user of usersRaw){
+        //adicionando telefone principal
+        const telefone = userDao.get
+        if(telefone) usuario.telefonePrincipal = telefone.numero
+
+        //adicionando email principal
+        const email = this.emailRepository.buscarEmailPrincipal(usuario.id)
+        if(email) usuario.emailPrincipal = email.email
+    }
+    //res.render('usuario', { usuarios })
+    //res.json(usuarios)
 
     const data = {
         title: "WEB II",
