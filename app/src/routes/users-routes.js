@@ -4,7 +4,6 @@ import { listaUsers, paginaAddUser, addUser } from '../controllers/users-control
 
 const router = Router()
 
-router.get('/', listaUsers)
 
 router.get('/addUser', paginaAddUser)
 

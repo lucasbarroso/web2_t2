@@ -1,40 +1,21 @@
-import { EmailDao } from "../models/email-dao.js"
-import { TelephoneDao } from "../models/telephone-dao.js"
-import { UserDao } from "../models/user-dao.js"
-import { User } from "../models/user-model.js"
-import { inspect } from 'util'
-import { paginate } from "../utils/paginate.js"
+import { UserDao } from "../models/user-dao.js";
+import { User } from "../models/user-model.js";
 
 function listaUsers(req, res) {
-    const userDao = new UserDao()
-    const telephoneDao = new TelephoneDao()
-    const emailDao = new EmailDao()
-    const usersRaw = userDao.getAll()
-    const pageNumber = 1
-    let users = []
-    for(let user of usersRaw){
-        
-        let returnUser = User.instanceRow(user)
-        //adicionando telefone principal
-        const telephone = telephoneDao.getTelephonePrincipal(user.cpf)
-        if(telephone) returnUser.telephonePrincipal = telephone.number
+    const userDao = new UserDao();
+    const usersRaw = userDao.list();
 
-        //adicionando email principal
-        const email = emailDao.getEmailPrincipal(user.cpf)
-        if(email) returnUser.emailPrincipal = email.email
-        console.log('user ' + inspect(user))
-        
+    // IDEALMENTE MAPEAMOS OS USERS (RAW/ BRUTA-CRUA DO BANCO DE DADOS PARA O MODEL USER)
+    const users = usersRaw.map(u => new User(u.name, u.email, u.password, u.created_at));
+    // no banco esta salvo como created_at (snake case)
+    // no model estamos utilizando camelCase
 
-        users.push(returnUser)
-    }
-
-    let paged = paginate(users, pageNumber)
-    console.log('paged ' + inspect(paged))
     const data = {
-        title: 'Lista de Usuários',
-        paged
+        title: "WEB II",
+        users
     }
-    return res.render('users-listagem', { data })
+    res.render('users-listagem', { data });
+    // o return é opcional aqui, cuidado para nao dar dois renders ao mesmo tempo
 }
 
 function paginaAddUser(req, res) {
@@ -51,28 +32,20 @@ function paginaAddUser(req, res) {
 // AUTENTICACAO
 // AUTORIZAÇÃO
 function addUser(req, res) {
-    const userDao = new UserDao()
-    const body = req.body
-    // verifica se cpf ja está cadastrado
-    let hasUser = userDao.getByCpf(body.cpf)
-    if(hasUser) {
-        const data = {
-            title: "WEB II - Add User",
-            errorMessage: "CPF já cadastrado!"
-        }        
-        return res.render('users-formulario', { data })
-    }
-    
-    // seta campo admin no formato esperado pelo banco 
-    if(body.isAdmin) body.isAdmin = 'true'
-    else body.isAdmin = 'false'
+    console.log({ rota: "/users/add", data: req.body })
+    const userDao = new UserDao();
 
-    const newUser = new User(body.name, body.cpf, body.password, body.isAdmin)
-    userDao.insert(newUser)
+    // const { name, email, password } = req.body;
+    // userDao.save({
+    //     name, email, password
+    // })
+
+    const dados = req.body;
+    const newUser = new User(dados.name, dados.email, dados.password);
+    userDao.save(newUser);
 
     res.redirect("/users");
 }
-
 function deleteUser(req, res) {//falta testar, porém ainda precisa da atualização do banco/model para testes
     const { cpf } = req.params;  
     const userDao = new UserDao();

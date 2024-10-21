@@ -1,38 +1,27 @@
 import { db } from "../config/database.js"
 
-class EmailDao {
-    getByUser(cpf_user){
-        const stmt = db.prepare('SELECT * FROM email WHERE cpf_user = ?')
-        return stmt.all(cpf_user)
+class EmailDAO {
+    constructor() {
+        this.db = db;
     }
 
-    getEmailPrincipal(cpf_user){
-        const stmt = db.prepare(`SELECT * FROM email WHERE cpf_user = ? and is_principal = true`)
-        return stmt.get(cpf_user)
+    createEmail(email) {
+        const stmt = this.db.prepare(`
+            INSERT INTO email (email, is_principal, cpf_user)
+            VALUES (?, ?, ?)
+        `);
+        stmt.run(email.email, email.isPrincipal, email.cpfUser);
     }
 
-    insert(cpf_user, email, is_principal) {
-        const stmt = db.prepare(`INSERT INTO 
-        email (email, cpf_user, is_principal)
-        VALUES (?, ?, ?)`)
-
-        return stmt.run(email, cpf_user, is_principal)
+    deleteEmailsByCpf(cpfUser) {
+        const stmt = this.db.prepare(`DELETE FROM email WHERE cpf_user = ?`);
+        stmt.run(cpfUser);
     }
 
-    update(email){
-        const stmt = db.prepare(`UPDATE email SET email = ?, is_principal = ? WHERE email = ?`)
-        return stmt.run(email.email, email.ehPrincipal, email.email)
-    }
-
-    delete(id){
-        const stmt = db.prepare(`DELETE FROM email WHERE id = ?`)
-        return stmt.run(id)
-    }
-
-    deleteByUser(cpf_user){
-        const stmt = db.prepare(`DELETE FROM email WHERE id_usuario = ?`)
-        return stmt.run(cpf_user)
+    getEmailsByCpf(cpfUser) {
+        const stmt = this.db.prepare(`SELECT * FROM email WHERE cpf_user = ?`);
+        return stmt.all(cpfUser);
     }
 }
 
-export { EmailDao }
+module.exports = EmailDAO
