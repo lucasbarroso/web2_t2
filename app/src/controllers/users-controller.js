@@ -1,4 +1,4 @@
-import { UserDao } from "../models/user-dao.js";
+
 import { User } from "../models/user-model.js";
 
 function listaUsers(req, res) {

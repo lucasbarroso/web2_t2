@@ -1,8 +1,13 @@
 class Email {
-    constructor(email, is_principal) {
-        this.email = email
-        this.is_principal = is_principal
+    constructor(id, email, idUser) {
+        this.id = id;
+        this.email = email;
+        this.id_user = id_user;
     }
+
+    // static instanceRow(row) {
+    //     return new Email(row.id, row.email, row.id_user);
+    // }
 }
 
 export {

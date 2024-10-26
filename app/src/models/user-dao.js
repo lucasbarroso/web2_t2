@@ -1,5 +1,5 @@
 import { db } from "../config/database.js";
-import { User } from "./user-model.js";
+// import { User } from "./user-model.js";
 
 const EmailDAO = require('./EmailDAO');
 const TelephoneDAO = require('./TelephoneDAO');
@@ -18,13 +18,6 @@ class UserDAO {
         `);
         stmt.run(user.cpf, user.name, user.password, user.isAdmin, user.createdAt, user.updatedAt);
 
-        user.emails.forEach(email => {
-            this.emailDAO.createEmail({ ...email, cpfUser: user.cpf });
-        });
-
-        user.telephones.forEach(phone => {
-            this.telephoneDAO.createTelephone({ ...phone, cpfUser: user.cpf });
-        });
     }
 
     updateUser(user) {
@@ -63,4 +56,6 @@ class UserDAO {
     }
 }
 
-module.exports = UserDAO;
+export {
+    UserDAO
+}

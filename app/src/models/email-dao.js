@@ -7,21 +7,22 @@ class EmailDAO {
 
     createEmail(email) {
         const stmt = this.db.prepare(`
-            INSERT INTO email (email, is_principal, cpf_user)
-            VALUES (?, ?, ?)
+            INSERT INTO email (email, id_user)
+            VALUES (?,?)
         `);
-        stmt.run(email.email, email.isPrincipal, email.cpfUser);
+        stmt.run(email.email, email.cpfUser);
     }
 
-    deleteEmailsByCpf(cpfUser) {
-        const stmt = this.db.prepare(`DELETE FROM email WHERE cpf_user = ?`);
-        stmt.run(cpfUser);
+    deleteEmailsById(id_user) {
+        const stmt = this.db.prepare(`DELETE FROM email WHERE id_user = ?`);
+        stmt.run(id_user);
     }
 
-    getEmailsByCpf(cpfUser) {
-        const stmt = this.db.prepare(`SELECT * FROM email WHERE cpf_user = ?`);
-        return stmt.all(cpfUser);
+    getEmailsById(id_user) {
+        const stmt = this.db.prepare(`SELECT * FROM email WHERE id_user = ?`);
+        return stmt.all(id_user);
     }
 }
-
-module.exports = EmailDAO
+export{
+    EmailDAO
+}

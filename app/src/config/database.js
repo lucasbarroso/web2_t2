@@ -7,7 +7,8 @@ const db = new Database('dados.db', {
 db.exec(`
     -- Tabela de usuários
 CREATE TABLE IF NOT EXISTS user (
-    cpf TEXT PRIMARY KEY UNIQUE,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cpf TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     password TEXT NOT NULL,
     is_admin BOOLEAN NOT NULL,
@@ -19,18 +20,16 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS telephone (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     number TEXT NOT NULL,
-    cpf_user TEXT NOT NULL,
-    is_principal BOOLEAN NOT NULL,
-    FOREIGN KEY (cpf_user) REFERENCES user(cpf) ON DELETE CASCADE
+    id_user INTEGER NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- Tabela de emails
 CREATE TABLE IF NOT EXISTS email (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL,
-    is_principal BOOLEAN NOT NULL,
-    cpf_user TEXT NOT NULL,
-    FOREIGN KEY (cpf_user) REFERENCES user(cpf) ON DELETE CASCADE
+    id_user INTEGER NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 `);
 

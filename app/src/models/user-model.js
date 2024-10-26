@@ -1,19 +1,21 @@
 class User {
-    constructor(name, cpf, password, emails, telephones, isAdmin, createdAt, updatedAt) {
-        this.name = name
-        this.cpf = cpf
-        this.password = password
-        this.isAdmin = isAdmin
-        this.createdAt = createdAt ?? Date.now()
-        this.updatedAt = updatedAt ?? Date.now()
-
+    constructor(id, cpf, name, password, mainPhone, mainEmail, isAdmin, createdAt = Date.now(), updatedAt = Date.now()) {
+        this.id = id;
+        this.cpf = cpf;
+        this.name = name;
+        this.password = password;
+        this.mainPhone = mainPhone;
+        this.mainEmail = mainEmail;
+        this.isAdmin = isAdmin;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    // static instanceRow(user){
-    //     return new User(user.name, user.cpf, user.password, user.is_admin, user.created_at, user.updatedAt)
-    // }
+    // Método para criar uma instância de User a partir de uma linha de resultado do banco de dados
+    static fromRow(row) {
+        return new User(row.id, row.cpf, row.name, row.password, row.mainPhone, row.mainEmail, row.is_admin, row.created_at, row.updated_at);
+    }
 }
-
 
 export {
     User
