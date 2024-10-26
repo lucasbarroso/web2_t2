@@ -13,14 +13,18 @@ class EmailDAO {
         stmt.run(email.email, email.cpfUser);
     }
 
-    deleteEmailsById(id_user) {
+    deleteEmailsByIdUser(id_user) {
         const stmt = this.db.prepare(`DELETE FROM email WHERE id_user = ?`);
         stmt.run(id_user);
     }
 
-    getEmailsById(id_user) {
+    getEmailsByIdUser(id_user) {
         const stmt = this.db.prepare(`SELECT * FROM email WHERE id_user = ?`);
         return stmt.all(id_user);
+    }
+    getEmailPrincipal(id_user){
+        const stmt = db.prepare(`SELECT * FROM email WHERE id_user = ? and is_principal = true`)
+        return stmt.get(id_user)
     }
 }
 export{

@@ -1,4 +1,4 @@
-const ITEMPERPAGE = 5 
+const ITEMPERPAGE = 5
 
 function paginate(users, pageNumber) {
     let paginate = {}

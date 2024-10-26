@@ -1,16 +1,17 @@
 class User {
-    constructor(name, cpf, password, isAdmin, createdAt, updatedAt) {
+    constructor(name, cpf, password, isAdmin, createdAt, updatedAt, id = null) {
         this.name = name
         this.cpf = cpf
         this.password = password
         this.isAdmin = isAdmin
         this.createdAt = createdAt ?? Date.now()
         this.updatedAt = updatedAt ?? Date.now()
+        this.id = id
 
     }
 
     static instanceRow(user){
-        return new User(user.name, user.cpf, user.password, user.is_admin, user.created_at, user.updatedAt)
+        return new User(user.name, user.cpf, user.password, user.is_admin, user.created_at, user.updatedAt, user.id)
     }
 }
 

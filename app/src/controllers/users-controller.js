@@ -1,29 +1,30 @@
-import { EmailDao } from "../models/email-dao.js"
-import { TelephoneDao } from "../models/telephone-dao.js"
-import { UserDao } from "../models/user-dao.js"
+
+import { TelephoneDAO } from "../models/telephone-dao.js"
+import { UserDAO } from "../models/user-dao.js"
 import { User } from "../models/user-model.js"
 import { inspect } from 'util'
 import { paginate } from "../utils/paginate.js"
+import { EmailDAO } from "../models/email-dao.js"
 
 function listaUsers(req, res) {
-    const userDao = new UserDao()
-    const telephoneDao = new TelephoneDao()
-    const emailDao = new EmailDao()
+    const userDao = new UserDAO()
+    const telephoneDao = new TelephoneDAO()
+    const emailDao = new EmailDAO()
     const usersRaw = userDao.getAll()
     const pageNumber = 1
     let users = []
-    for(let user of usersRaw){
-        
+    for (let user of usersRaw) {
+
         let returnUser = User.instanceRow(user)
         //adicionando telefone principal
-        const telephone = telephoneDao.getTelephonePrincipal(user.cpf)
-        if(telephone) returnUser.telephonePrincipal = telephone.number
+        const telephone = telephoneDao.getTelephonePrincipal(user.id)
+        if (telephone) returnUser.telephonePrincipal = telephone.number
 
         //adicionando email principal
         const email = emailDao.getEmailPrincipal(user.cpf)
-        if(email) returnUser.emailPrincipal = email.email
+        if (email) returnUser.emailPrincipal = email.email
         console.log('user ' + inspect(user))
-        
+
 
         users.push(returnUser)
     }
@@ -51,20 +52,20 @@ function paginaAddUser(req, res) {
 // AUTENTICACAO
 // AUTORIZAÇÃO
 function addUser(req, res) {
-    const userDao = new UserDao()
+    const userDao = new UserDAO()
     const body = req.body
     // verifica se cpf ja está cadastrado
     let hasUser = userDao.getByCpf(body.cpf)
-    if(hasUser) {
+    if (hasUser) {
         const data = {
             title: "WEB II - Add User",
             errorMessage: "CPF já cadastrado!"
-        }        
+        }
         return res.render('users-formulario', { data })
     }
-    
+
     // seta campo admin no formato esperado pelo banco 
-    if(body.isAdmin) body.isAdmin = 'true'
+    if (body.isAdmin) body.isAdmin = 'true'
     else body.isAdmin = 'false'
 
     const newUser = new User(body.name, body.cpf, body.password, body.isAdmin)
@@ -73,23 +74,40 @@ function addUser(req, res) {
     res.redirect("/users");
 }
 
-function deleteUser(req, res) {//falta testar, porém ainda precisa da atualização do banco/model para testes
-    const { cpf } = req.params;  
-    const userDao = new UserDao();
+
+
+function deleteUser(req, res) {
+    const userDao = new UserDAO()
+    const telephoneDao = new TelephoneDAO()
+    const emailDao = new EmailDAO()
 
     try {
-        userDao.delete(cpf);  
-        res.redirect("/users");  
-    } catch (error) {
+        const id = req.params.id
+
+        //Verifica se o usuario é admin
+        const user = userDao.buscaPorId(id)
+        if (user.isAdmin == 'true') {
+            return res.status(403).send('Usuário admin não pode ser removido')
+        }
+        telephoneDao.deleteTelephonesByIdUser(id)
+        emailDao.deleteEmailsByIdUser(id)
+        userDao.delete(id)
+        res.sendStatus(200)
+    }
+
+    catch (error) {
         console.error("Erro ao tentar remover o usuário:", error);
         res.status(500).send("Erro ao tentar remover o usuário.");
     }
 }
 
+
+
 export {
     addUser,        // O cpf tem que  ser unico + o perfil (ADMIN/CLIENTE) já é setado na etapa inicial
     listaUsers,     // paginacao (a cada 5) e filtro (pelo nome)
     paginaAddUser,
+    deleteUser,
     // detalhes de usuario  (ver todos os dados de usuario + telefones, emails)
     // exclusao de usuario  (NAO POSSO REMOVER ADMINS)
     // update de usuario (EXCETO PERFIL (admin/cliente) e CPF, todos os outros dados do usuario, telefones e emails podem ser atualizados inclusive setando qual o email/telefone principal)

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS telephone (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     number TEXT NOT NULL,
     id_user INTEGER NOT NULL,
+    is_principal BOOLEAN NOT NULL,
     FOREIGN KEY (id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS telephone (
 CREATE TABLE IF NOT EXISTS email (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL,
-    id_user INTEGER NOT NULL,
+    is_principal BOOLEAN NOT NULL,
+    id_user INTEGER NOT NULL,    
     FOREIGN KEY (id_user) REFERENCES user(id) ON DELETE CASCADE
 );
 `);

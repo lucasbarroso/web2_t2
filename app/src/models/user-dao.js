@@ -1,9 +1,15 @@
 import { db } from "../config/database.js"
 
-class UserDao {
+class UserDAO {
     getAll(){
         const stmt = db.prepare('SELECT * FROM user')
         return stmt.all()
+    }
+    
+
+    getById(id){
+        const stmt = db.prepare(`SELECT * FROM user WHERE id = ?`)
+        return stmt.get(id)
     }
 
     getByCpf(cpf){
@@ -30,5 +36,5 @@ class UserDao {
 }
 
 export {
-    UserDao
+    UserDAO
 }
