@@ -11,7 +11,11 @@
         <% for (let i = 0; i < data.paged.users.length; i++) { %>
             <li>
                 <%= data.paged.users[i].name %> - <%= data.paged.users[i].createdAt %>
+                
 
+            </li>
+            <li>
+                <a href="/users/deleteUser/<%=data.paged.users[i].id %> ">deletar</a>
             </li>
         <% } %>
 

@@ -85,7 +85,7 @@ function deleteUser(req, res) {
         const id = req.params.id
 
         //Verifica se o usuario é admin
-        const user = userDao.buscaPorId(id)
+        const user = userDao.getById(id)
         if (user.isAdmin == 'true') {
             return res.status(403).send('Usuário admin não pode ser removido')
         }
@@ -100,6 +100,84 @@ function deleteUser(req, res) {
         res.status(500).send("Erro ao tentar remover o usuário.");
     }
 }
+
+function updateUser(req, res) {
+    const userDao = new UserDAO()
+    const telephoneDao = new TelephoneDAO()
+    const emailDao = new EmailDAO()
+    const { name, password, createdAt, udpatedAt } = req.body
+    const { id } = req.params
+    const user = new User(name, null, password, null, createdAt, udpatedAt, id)
+
+    try {
+        let verifyPhone = user.verifyIfMainPhoneExists()
+        if (!verifyPhone.exists) return res.render("user-atualiza", { message: verifyPhone.message })
+        let verifyMail = user.verifyIfMainEmailExists()
+        if (!verifyMail.exists) return res.render("user-atualiza", { message: verifyMail.message })
+
+
+       
+
+        userDao.update(user)
+        user.updateTelephones()
+        user.updateEmail()
+        
+       
+
+
+    }
+
+    catch {
+        console.error("Erro ao tentar atualizar o usuário:", error);
+        res.status(500).send("Erro ao tentar atualizar o usuário.");
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+// atualizar(req, res){
+//     const { nome, cpf, tipo, telefones, emails } = req.body
+//     const { id } = req.params
+//     const usuario = new Usuario(id, nome, cpf, tipo, null, telefones, null, emails)
+
+//     //Verifica se o usuario pode ser atualizado
+//     if (usuario.podeAtualizar()) this.usuarioRepository.atualizar(usuario)
+
+//     //Verifica se existe apenas um telefone principal
+//     let exiteTelefonePrincipal = usuario.verificaExisteTelefonePrincipal()
+//     console.log(inspect(exiteTelefonePrincipal))
+//     if (!exiteTelefonePrincipal.existe) return res.status(400).send(exiteTelefonePrincipal.mensagem)
+
+//     //Verifica se existe apenas um email principal
+//     let exiteEmailPrincipal = usuario.verificaExisteEmailPrincipal()
+//     if (!exiteEmailPrincipal.existe) return res.status(400).send(exiteEmailPrincipal.mensagem)
+
+//     //Atualiza telefone
+//     usuario.atualizaTelefones(this.telefoneRepository)
+
+//     //Atualiza email
+//     usuario.atualizarEmails(this.emailRepository)
+
+//     res.sendStatus(200)
+// }
+
+
+
+
+
+
+
+
+
+
 
 
 

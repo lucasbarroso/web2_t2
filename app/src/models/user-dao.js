@@ -24,14 +24,14 @@ class UserDAO {
         return stmt.run(user.cpf, user.name, user.password, user.isAdmin, user.createdAt)
     }
 
-    update(cpf, name, password, is_admin, updated_at){
-        const stmt = this.db.prepare(`UPDATE user SET name = ?, password = ?, is_admin = ?, updated_at = ? WHERE cpf = ?`)
-        return stmt.run(name, password, is_admin, updated_at, cpf)
+    update(user){
+        const stmt = db.prepare(`UPDATE user SET name = ?, password = ?, is_admin = ?, updated_at = ? WHERE cpf = ?`)
+        return stmt.run(user.name, user.password, user.is_admin, user.updated_at, user.cpf)
     }
 
-    delete(cpf){
-        const stmt = this.db.prepare(`DELETE FROM user WHERE cpf = ?`)
-        return stmt.run(cpf)
+    delete(id){
+        const stmt = db.prepare(`DELETE FROM user WHERE id = ?`)
+        return stmt.run(id)
     }
 }
 
