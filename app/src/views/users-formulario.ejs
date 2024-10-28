@@ -1,30 +1,180 @@
 <%- include('includes/head') %>
 
-<body>
+<body class="bg-gray-100">
+    
     <%- include('includes/nav') %>
 
-    <h1> <%= data.title %> </h1>
+    <h1 class="text-center text-3xl font-semibold"> <%= data.title %> </h1>
 
     <% if (data.errorMessage) { %>
         <h4><%= data.errorMessage %></h4>
     <% } %>
     
-    <form action="/users/addUser" method="post">
-        
-        <label for="cpf">CPF: </label>
-        <input type="text" name="cpf">
-        <br>
-        <label for="name">Nome: </label>
-        <input type="text" name="name">
-        <br>
-        <label for="password">Senha: </label>
-        <input type="password" name="password">
-        <br>
-        <input type="checkbox" id="isAdmin" name="isAdmin" value="true">
-        <label for="isAdmin"> Criar como ADM</label><br>
-        <button type="submit">CADASTRAR</button>
+    <div class="container mx-auto mt-8">
 
-    </form>
+        <form class="w-full max-w-sm" id="" action="/users/addUser" method="post">
+            <div class="md:flex mb-6">
+                <div class="md:w-1/3">
+                    <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="cpf">CPF: </label>
+                </div>
+                <div class="md:w-2/3">
+                    <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" name="cpf">
+                </div>
+            </div>
+            <br>
+            <div class="md:flex mb-6">
+                <div class="md:w-1/3">
+                    <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">Nome: </label>
+                </div>
+                <div class="md:w-2/3">
+                    <input  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" name="name">
+                </div>
+            </div>
+            <br>
+            <div class="md:flex mb-6">
+                <div class="md:w-1/3">
+                    <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="password">Senha: </label>
+                </div>
+                <div class="md:w-2/3">
+                    <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" name="password">
+                </div>
+            </div>
+            <br>
+            <div id="telefonesContainer">
+                <div class="md:flex mb-6" id="telefone1">
+                    <div class="md:w-1/3">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="telefone1">Telefone 1:</label>
+                    </div>
+                    <div class="md:w-2/3">
+                        <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" id="telefone1" name="telephones" required>
+                    </div>
+                    <div class="md:w-3/3">
+                        <label class="md:w-3/3 block text-gray-500 font-bold">
+                            <input type="radio" name="telefonePrincipal" value="1" required> Principal
+                            <span class="text-sm" id="remove-button" onclick="removerTelefone(this)">❌</span>
+                        </label>
+                    </div>
+                </div>               
+            </div>
+            <br>
+            <div class="md:flex mb-6">
+                <button type="button" onclick="adicionarTelefone()" class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white py-1 px-2 rounded">Adicionar Telefone</button>
+            </div>
+            <br>
+            <div id="emailsContainer">
+                <div class="md:flex mb-6" id="email1">
+                    <div class="md:w-1/3">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email1">Email 1:</label>
+                    </div>
+                    <div class="md:w-2/3">
+                        <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" id="email1" name="emails" required>
+                    </div>
+                    <div class="md:w-3/3">
+                        <label class="md:w-3/3 block text-gray-500 font-bold">
+                            <input type="radio" name="emailPrincipal" value="1" required> Principal
+                            <span class="text-sm" id="remove-button" onclick="removerEmail(this)">❌</span>
+                        </label>
+                    </div>
+                </div>               
+            </div>
+            <br>
+            <div class="md:flex mb-6">
+                <button type="button" onclick="adicionarEmail()" class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white py-1 px-2 rounded">Adicionar Email</button>
+            </div>
+            <div class="md:flex mb-6">
+                <div class="md:w-1/3"></div>
+                <label class="md:w-2/3 block text-gray-500 font-bold">
+                    <input type="checkbox" id="isAdmin" class="mr-2 leading-tight" name="isAdmin" value="true">
+                    <span class="text-sm">
+                        Criar como ADM
+                    </span>
+                </label>
+            </div>
+            <br>
+            <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">Cadastrar</button>
+        </form>
+    </div>
+     <script>
+        let contadorTelefone = 2
+        let contadorEmail = 2
 
+        function adicionarTelefone() {
+            const container = document.getElementById('telefonesContainer')
+            const novoTelefone = document.createElement('div')
+            novoTelefone.classList.add('telefone')
+            novoTelefone.innerHTML = `
+            <div class="md:flex mb-6" id="telefone${contadorTelefone}">
+                    <div class="md:w-1/3">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="telefone${contadorTelefone}">Telefone ${contadorTelefone}:</label>
+                    </div>
+                    <div class="md:w-2/3">
+                        <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" id="telefone${contadorTelefone}" name="telephones" required>
+                    </div>
+                    <div class="md:w-3/3">
+                        <label class="md:w-3/3 block text-gray-500 font-bold">
+                            <input type="radio" name="telefonePrincipal" value="${contadorTelefone}" required> Principal
+                            <span class="text-sm" id="remove-button" onclick="removerTelefone(this)">❌</span>
+                        </label>
+                    </div>
+                </div>  
+            `;
+            container.appendChild(novoTelefone)
+            contadorTelefone++
+        }
+
+        function removerTelefone(element) {
+            const telefoneDiv = element.closest('.telefone')
+            if (telefoneDiv) {
+                telefoneDiv.remove()
+            }
+        }
+
+        function adicionarEmail() {
+            const container = document.getElementById('emailsContainer')
+            const novoEmail = document.createElement('div')
+            novoEmail.classList.add('email')
+            novoEmail.innerHTML = `
+            <div class="md:flex mb-6" id="email${contadorEmail}">
+                    <div class="md:w-1/3">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email${contadorEmail}">Email ${contadorEmail}:</label>
+                    </div>
+                    <div class="md:w-2/3">
+                        <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" id="email${contadorEmail}" name="emails" required>
+                    </div>
+                    <div class="md:w-3/3">
+                        <label class="md:w-3/3 block text-gray-500 font-bold">
+                            <input type="radio" name="emailPrincipal" value="${contadorEmail}" required> Principal
+                            <span class="text-sm" id="remove-button" onclick="removerEmail(this)">❌</span>
+                        </label>
+                    </div>
+                </div>  
+            `;
+            container.appendChild(novoEmail)
+            contadorEmail++
+        }
+
+        function removerEmail(element) {
+            const emailDiv = element.closest('.email')
+            if (emailDiv) {
+                emailDiv.remove()
+            }
+        }
+
+        document.getElementById('cadastroForm').onsubmit = function(event) {
+            event.preventDefault()
+            alert('Cadastro realizado com sucesso!')
+            this.reset()
+            const telefonesContainer = document.getElementById('telefonesContainer')
+            while (telefonesContainer.children.length > 1) {
+                telefonesContainer.removeChild(telefonesContainer.lastChild)
+            }
+            const emailsContainer = document.getElementById('emailsContainer')
+            while (emailsContainer.children.length > 1) {
+                emailsContainer.removeChild(emailsContainer.lastChild)
+            }
+            contadorTelefone = 2
+            contadorEmail = 2
+        }
+    </script>
 </body>
 </html>

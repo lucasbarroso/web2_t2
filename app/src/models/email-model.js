@@ -1,17 +1,27 @@
-import { EmailDAO } from "./email-dao"
+import { EmailDAO } from "./email-dao.js"
 
 class Email {
-    constructor(email, is_principal, id_user) {
+    constructor(id, email, isPrincipal, id_user) {
         this.email = email
-        this.is_principal = is_principal
+        this.isPrincipal = isPrincipal
         this.id_user = id_user
+        this.id = id
+    }
+
+    static instanceList(emails, principal){
+        let emailObjects = []
+        for(let i = 0; i < emails.length; i++){
+            if(i == principal - 1) emailObjects.push(new Email(null, emails[i], 'true'))
+            else emailObjects.push(new Email(null, emails[i], 'false'))
+        }
+        return emailObjects
     }
 
     static insertList(emails, id_user) {
         let emailDAO = new EmailDAO()
         for (let email of emails) {
-            const mail = new Email(null, email.number, email.isPrincipal)
-            emailDAO.inserir(id_user, mail)
+            const mail = new Email(null, email.email, email.isPrincipal, id_user)
+            emailDAO.createEmail(mail)
         }
     }
 
@@ -26,7 +36,7 @@ class Email {
     static updateList(emails) {
         let emailDAO = new EmailDAO()
         for (let email of emails) {
-            let mail = new Email(email.id, email.num, email.isPrincipal)
+            let mail = new Email(email.id, email.email, email.isPrincipal)
             emailDAO.atualizar(mail)
         }
     }

@@ -1,21 +1,21 @@
-import { EmailDAO } from "./email-dao"
-import { Email } from "./email-model"
-import { TelephoneDAO } from "./telephone-dao"
-import { Telephone } from "./telephone-model"
+import { EmailDAO } from "./email-dao.js"
+import { Email } from "./email-model.js"
+import { TelephoneDAO } from "./telephone-dao.js"
+import { Telephone } from "./telephone-model.js"
 
 class User {
-    constructor(name, cpf, password, isAdmin, createdAt, updatedAt, id = null, mainPhone = null, mainEmail = null, telephones = null, emails = null) {
-        this.name = name
-        this.cpf = cpf
-        this.password = password
-        this.isAdmin = isAdmin
-        this.createdAt = createdAt ?? Date.now()
-        this.updatedAt = updatedAt ?? Date.now()
-        this.id = id
-        this.mainPhone= mainPhone
-        this.mainEmail = mainEmail
-        this.telephones = telephones
-        this.emails = emails
+    constructor(user) {
+        this.name = user.name
+        this.cpf = user.cpf
+        this.password = user.password
+        this.isAdmin = user.isAdmin
+        this.createdAt = user.createdAt ?? Date.now()
+        this.updatedAt = user.updatedAt ?? Date.now()
+        this.id = user.id
+        this.mainPhone = user.mainPhone
+        this.mainEmail = user.mainEmail
+        this.telephones = user.telephones
+        this.emails = user.emails
     }
 
     static instanceRow(user) {
@@ -24,14 +24,14 @@ class User {
 
     verifyIfMainPhoneExists() {
         let mainCount = 0
-        for (let phone of this.telephones) if (phone.isPrincipal == 1) mainCount++
+        for (let phone of this.telephones) if (phone.isPrincipal == 'true') mainCount++
         if (mainCount > 1) return { message: 'Só é possível ter um Telefone principal', exists: false }
         else if (mainCount == 0 && this.telephones.length > 0) return { message: 'É necessário ao menos um Telefone principal', exists: false }
         return { message: null, exists: true }
     }
     verifyIfMainEmailExists() {
         let mainCount = 0
-        for (let mail of this.emails) if (mail.isPrincipal == 1) mainCount++
+        for (let mail of this.emails) if (mail.isPrincipal == 'true') mainCount++
         if (mainCount > 1) return { message: 'Só é possível ter um Email principal', exists: false }
         else if (mainCount == 0 && this.emails.length > 0) return { message: 'É necessário ao menos um Email principal', exists: false }
         return { message: null, exists: true }

@@ -7,15 +7,25 @@ class TelephoneDAO {
 
     createTelephone(telephone) {
         const stmt = this.db.prepare(`
-            INSERT INTO telephone (number,  id_user)
-            VALUES (?, ?)
+            INSERT INTO telephone (number,  id_user, is_principal)
+            VALUES (?,?,?)
         `);
-        stmt.run(telephone.number, telephone.id_user);
+        stmt.run(telephone.number, telephone.id_user, telephone.isPrincipal);
+    }
+
+    update(telephone) {
+        const stmt = this.db.prepare(`UPDATE telephone SET number = ?, is_principal = ? WHERE id = ?`)
+        return stmt.run(telephone.number, telephone.isPrincipal, telephone.id)
     }
 
     deleteTelephonesByIdUser(id_user) {
         const stmt = this.db.prepare(`DELETE FROM telephone WHERE id_user = ?`);
         stmt.run(id_user);
+    }
+
+    delete(id) {
+        const stmt = this.db.prepare(`DELETE FROM telephone WHERE id = ?`);
+        stmt.run(id);
     }
 
     getTelephonesByIdUser(id_user) {

@@ -7,10 +7,10 @@ class EmailDAO {
 
     createEmail(email) {
         const stmt = this.db.prepare(`
-            INSERT INTO email (email, id_user)
-            VALUES (?,?)
+            INSERT INTO email (email, id_user, is_principal)
+            VALUES (?,?,?)
         `);
-        stmt.run(email.email, email.cpfUser);
+        stmt.run(email.email, email.id_user, email.isPrincipal);
     }
 
     deleteEmailsByIdUser(id_user) {
