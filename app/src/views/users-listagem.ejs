@@ -1,24 +1,96 @@
 <%- include('includes/head') %>
 
-<body>
+<body class="bg-gray-100">
     <%- include('includes/nav') %>
 
-    <a href="/users/addUser">ADICIONAR USUARIO</a>
+    <% if (data.errorMessage) { %>
+        <h4><%= data.errorMessage %></h4>
+    <% } %>
     <br>
-    <h1> <%= data.title %> </h1>
-    <ul>
+    <header class="bg-blue-600 text-white p-4">
+        <h1 class="text-center text-3xl font-semibold"><%= data.title %> </h1>
+    </header>
+    <div class="container mx-auto mt-8">
+        <form method="get" action="/users">
+            <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" name="search">
+            <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-1 px-2 rounded">Pesquisar</button>
+        </form>
+
+        <div class="bg-white shadow-md rounded my-6">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">ID</th>
+                        <th class="py-3 px-6 text-left">Nome</th>
+                        <th class="py-3 px-6 text-left">CPF</th>
+                        <th class="py-3 px-6 text-left">Email</th>
+                        <th class="py-3 px-6 text-left">Telefone</th>
+                        <th class="py-3 px-6 text-left">Role</th>
+                        <th class="py-3 px-6 text-left">Ações</th>
+                      </tr>
+                </thead>
+                
+                <tbody class="text-gray-600 text-sm font-light">
+                    <% for (let i = 0; i < data.paged.users.length; i++) { %>
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap"><%= data.paged.users[i].id %></td>
+                        <td class="py-3 px-6 text-left"><%= data.paged.users[i].name %></td>
+                        <td class="py-3 px-6 text-left"><%= data.paged.users[i].cpf %></td>
+                        <td class="py-3 px-6 text-left"><%= data.paged.users[i].mainEmail %></td>
+                        <td class="py-3 px-6 text-left"><%= data.paged.users[i].mainPhone %></td>
+                        <td class="py-3 px-6 text-left"><%= data.paged.users[i].isAdmin %></td>
+                        <td class="py-3 px-6 text-left">
+                            <a href="/users/user/<%=data.paged.users[i].id %> ">detalhes</a>
+                            <a href="/users/updateUser/<%=data.paged.users[i].id %> ">atualizar</a>
+                            <a href="/users/deleteUser/<%=data.paged.users[i].id %> ">deletar</a>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        
+        <div class="flex justify-between items-center mt-4">
+            <span class="text-sm text-gray-600">Showing <%= data.paged.firtItemPage %> to <%= data.paged.lastItemPage%> of <%= data.paged.totalItems %> entries</span>
+            <nav class="inline-flex shadow-sm">
+                <form method="get" action="/users">
+                    <input type="hidden" name="pageNumber" value="<%= data.paged.previousPage %>">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800 rounded-l-md">Anterior</button>
+                </form>
+                <form method="get" action="/users"> 
+                    <input type="hidden" name="pageNumber" value="<%= data.paged.previousPage %>">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800"><%= data.paged.previousPage %></button>
+                </form>
+                <form method="get" action="/users"> 
+                    <input type="hidden" name="pageNumber" value="<%= data.paged.pageNumber %>">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800"><%= data.paged.pageNumber %></button>
+                </form>
+                <form method="get" action="/users"> 
+                    <input type="hidden" name="pageNumber" value="<%= data.paged.nextPage %>">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800"><%= data.paged.nextPage %></button>
+                </form>
+                <form method="get" action="/users"> 
+                    <input type="hidden" name="pageNumber" value="<%= data.paged.nextPage %>">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800">Próxima</button>
+                </form>
+            </nav>
+        </div>
+        <br>
+        <a class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" href="/users/addUser">ADICIONAR USUARIO</a>
+    </div>
+    <!-- <ul>
         
         <% for (let i = 0; i < data.paged.users.length; i++) { %>
             <li>
                 <%= data.paged.users[i].name %> - <%= data.paged.users[i].createdAt %>
-                
-
+            
             </li>
             <li>
                 <a href="/users/deleteUser/<%=data.paged.users[i].id %> ">deletar</a>
             </li>
         <% } %>
 
-    </ul>
+    </ul> -->
 </body>
 </html>

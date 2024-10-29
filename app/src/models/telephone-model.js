@@ -10,10 +10,12 @@ class Telephone {
 
     static instanceList(telephenes, principal){
         let phoneObjects = []
-        for(let i = 0; i < telephenes.length; i++){
-            if(i == principal - 1) phoneObjects.push(new Telephone(null, telephenes[i], 'true'))
-            else phoneObjects.push(new Telephone(null, telephenes[i], 'false'))
-        }
+        if(Array.isArray(telephenes)){
+            for(let i = 0; i < telephenes.length; i++){
+                if(i == principal - 1) phoneObjects.push(new Telephone(null, telephenes[i], 'true'))
+                else phoneObjects.push(new Telephone(null, telephenes[i], 'false'))
+            }
+        } else phoneObjects.push(new Telephone(null, telephenes, 'true'))
         return phoneObjects
     }
 

@@ -10,10 +10,13 @@ class Email {
 
     static instanceList(emails, principal){
         let emailObjects = []
-        for(let i = 0; i < emails.length; i++){
-            if(i == principal - 1) emailObjects.push(new Email(null, emails[i], 'true'))
-            else emailObjects.push(new Email(null, emails[i], 'false'))
-        }
+        if(Array.isArray(emails)){
+            for(let i = 0; i < emails.length; i++){
+                if(i == principal - 1) emailObjects.push(new Email(null, emails[i], 'true'))
+                else emailObjects.push(new Email(null, emails[i], 'false'))
+            }
+        } else emailObjects.push(new Email(null, emails, 'true'))
+        
         return emailObjects
     }
 
@@ -29,7 +32,7 @@ class Email {
         let emailDAO = new EmailDAO()
 
         for (let email of emails) {
-            emailDAO.deletar(email.id)
+            emailDAO.delete(email.id)
         }
     }
 
@@ -37,7 +40,7 @@ class Email {
         let emailDAO = new EmailDAO()
         for (let email of emails) {
             let mail = new Email(email.id, email.email, email.isPrincipal)
-            emailDAO.atualizar(mail)
+            emailDAO.update(mail)
         }
     }
 

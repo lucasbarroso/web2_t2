@@ -19,7 +19,7 @@ class User {
     }
 
     static instanceRow(user) {
-        return new User(user.name, user.cpf, user.password, user.is_admin, user.created_at, user.updatedAt, user.id)
+        return new User({name: user.name, cpf: user.cpf, password: user.password, isAdmin: user.is_admin, createdAt: user.created_at, updatedAt: user.updatedAt, id: user.id})
     }
 
     verifyIfMainPhoneExists() {
@@ -39,7 +39,7 @@ class User {
 
     updateTelephones(){
         let telephoneDAO = new TelephoneDAO()
-        let oldTelephone = telephoneDAO.findByUserId(this.id)
+        let oldTelephone = telephoneDAO.getTelephonesByIdUser(this.id)
 
         let telephoneInsert = this.telephones.filter((telephone) => { if(oldTelephone.findIndex((oldTelephone) => oldTelephone.id == telephone.id) == -1) return telephone })
         let telephoneDelete = oldTelephone.filter((oldTelephone) => { if(this.telephones.findIndex((telephone) => oldTelephone.id == telephone.id) == -1) return oldTelephone })
@@ -54,7 +54,7 @@ class User {
     }
     updateEmail(){
         let emailDAO = new EmailDAO()
-        let oldEmail = emailDAO.findByUserId(this.id)
+        let oldEmail = emailDAO.getEmailsByIdUser(this.id)
 
         let emailInsert = this.emails.filter((email) => { if(oldEmail.findIndex((oldEmail) => oldEmail.id == email.id) == -1) return email })
         let emailDelete = oldEmail.filter((oldEmail) => { if(this.emails.findIndex((email) => oldEmail.id == email.id) == -1) return oldEmail })

@@ -33,7 +33,7 @@ class TelephoneDAO {
         return stmt.all(id_user);
     }
     getTelephonePrincipal(id_user){
-        const stmt = db.prepare(`SELECT * FROM telephone WHERE id_user = ? and is_principal = true`)
+        const stmt = db.prepare(`SELECT * FROM telephone WHERE id_user = ? and is_principal = 'true'`)
         return stmt.get(id_user)
     }
 }
